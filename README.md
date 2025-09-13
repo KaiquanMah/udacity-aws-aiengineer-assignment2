@@ -1,1 +1,1 @@
-# udacity-aws-awengineer-assignment2
+# udacity-aws-aiengineer-assignment2
