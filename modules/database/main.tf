@@ -23,7 +23,24 @@ resource "aws_rds_cluster" "aurora_serverless" {
 
 resource "aws_rds_cluster_instance" "aurora_instance" {
   cluster_identifier = aws_rds_cluster.aurora_serverless.id
-  instance_class     = "db.t3.medium"
+  # round1
+  # instance_class     = "db.t3.medium"
+  # │ Error: creating RDS Cluster (my-aurora-serverless) Instance (tf-20250915022434192200000001): operation error RDS: CreateDBInstance, https response error StatusCode: 400, RequestID: ab8b4c04-50bb-42a3-8179-a0fda6bf1d21, api error InvalidParameterCombination: The instance class that you specified doesn't support the HTTP endpoint for using RDS Data API.
+  # │ 
+  # │   with module.aurora_serverless.aws_rds_cluster_instance.aurora_instance,
+  # │   on ../modules/database/main.tf line 24, in resource "aws_rds_cluster_instance" "aurora_instance":
+  # │   24: resource "aws_rds_cluster_instance" "aurora_instance" {
+  # round2
+  # module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Creating...
+  # module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [10s elapsed]
+  # module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [3m0s elapsed]
+  # module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [3m10s elapsed]
+  # module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [3m20s elapsed]
+  # instance_class     = "db.serverless" # "db.t3.medium"
+  # round3 - no instance_class - for aws aurora serverless
+  # need instance_class
+  # round4
+  instance_class     = "db.serverless"
   engine             = aws_rds_cluster.aurora_serverless.engine
   engine_version     = aws_rds_cluster.aurora_serverless.engine_version
 }
