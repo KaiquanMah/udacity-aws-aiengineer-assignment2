@@ -64,6 +64,10 @@ module "aurora_serverless" {
   # allowed_cidr_blocks = ["10.0.0.0/16"]   
   # UPDATED: This now correctly allows traffic from within the Default VPC.
   allowed_cidr_blocks = [data.aws_vpc.default.cidr_block]
+  
+  # --- NEW: Tell the module to create this DB user ---
+  # app_username = "app_user_01"
+
 }
 
 data "aws_caller_identity" "current" {}
@@ -95,10 +99,16 @@ module "s3_bucket" {
     }
   }
 
-  block_public_acls       = true
-  block_public_policy     = true
-  ignore_public_acls      = true
-  restrict_public_buckets = true
+  # block_public_acls       = true
+  # block_public_policy     = true
+  # ignore_public_acls      = true
+  # restrict_public_buckets = true
+  # 2025.09.16 Fix to allow public access to VPC, to connect and run SQL on Aurora Serverless DB (required to complete assignment 2)
+  #            Otherwise we are able to connect to Aurora DB on the 'Aurora and RDS' GUI, BUT unable to run queries (for some unexpected reason because permissions are not given for the assignment)
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 
   tags = {
     Terraform   = "true"

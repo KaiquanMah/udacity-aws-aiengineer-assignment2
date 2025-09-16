@@ -43,6 +43,11 @@ resource "aws_rds_cluster_instance" "aurora_instance" {
   instance_class     = "db.serverless"
   engine             = aws_rds_cluster.aurora_serverless.engine
   engine_version     = aws_rds_cluster.aurora_serverless.engine_version
+
+  
+  # 2025.09.16
+  # --- NEW ---
+  publicly_accessible = true
 }
 
 resource "aws_db_subnet_group" "aurora" {
@@ -101,3 +106,128 @@ resource "aws_secretsmanager_secret_version" "aurora_secret_version" {
     db                  = aws_rds_cluster.aurora_serverless.database_name
   })
 }
+
+
+
+
+
+
+
+# # 2025.09.16
+# # --- NEW: variables for app user creation ---
+# variable "app_username" {
+#   description = "Optional: Application DB username to create (Aurora PostgreSQL). If null, skip creating."
+#   type        = string
+#   default     = null
+# }
+# # --- NEW: random password for the app user (keep special=false to avoid SQL quoting issues) ---
+# resource "random_password" "app_user_password" {
+#   count   = var.app_username == null ? 0 : 1
+#   length  = 20
+#   special = false
+# }
+# 
+# # --- NEW: Secret for the app user. Use the 'rds-db-credentials/' prefix so the standard Query Editor IAM policy can read it ---
+# resource "aws_secretsmanager_secret" "app_user_secret" {
+#   count                   = var.app_username == null ? 0 : 1
+#   name                    = "rds-db-credentials/${var.cluster_identifier}-${var.app_username}"
+#   recovery_window_in_days = 0
+# }
+# 
+# resource "aws_secretsmanager_secret_version" "app_user_secret_version" {
+#   count        = var.app_username == null ? 0 : 1
+#   secret_id    = aws_secretsmanager_secret.app_user_secret[0].id
+#   secret_string = jsonencode({
+#     username = var.app_username
+#     password = random_password.app_user_password[0].result
+#   })
+# }
+# 
+# # --- NEW: Create the DB user via RDS Data API and grant privileges ---
+# resource "null_resource" "create_app_user" {
+#   count = var.app_username == null ? 0 : 1
+# 
+#   # Ensure DB is ready before we run SQL
+#   depends_on = [
+#     aws_rds_cluster_instance.aurora_instance
+#   ]
+# 
+#   # Re-run if any of these change
+#   triggers = {
+#     cluster_arn  = aws_rds_cluster.aurora_serverless.arn
+#     secret_arn   = aws_secretsmanager_secret.aurora_secret.arn  # master creds secret you already create above
+#     db_name      = aws_rds_cluster.aurora_serverless.database_name
+#     app_username = var.app_username
+#     pw_checksum  = sha256(random_password.app_user_password[0].result)
+#   }
+# 
+#   provisioner "local-exec" {
+#     # Requires AWS CLI v2 in the environment where you run `terraform apply`
+#     interpreter = ["/bin/bash", "-lc"]
+#     command = <<-EOT
+#       set -euo pipefail
+# 
+#       CLUSTER_ARN="${aws_rds_cluster.aurora_serverless.arn}"
+#       MASTER_SECRET_ARN="${aws_secretsmanager_secret.aurora_secret.arn}"
+#       DB="${aws_rds_cluster.aurora_serverless.database_name}"
+#       APP_USER="${var.app_username}"
+#       APP_PW="${random_password.app_user_password[0].result}"
+# 
+#       # 1) Create ROLE if not exists (single statement with a DO block so it's idempotent)
+#       aws rds-data execute-statement \
+#         --resource-arn "$CLUSTER_ARN" \
+#         --secret-arn "$MASTER_SECRET_ARN" \
+#         --database "$DB" \
+#         --sql "DO $$ BEGIN
+#                  IF NOT EXISTS (SELECT 1 FROM pg_roles WHERE rolname = '$APP_USER') THEN
+#                    CREATE ROLE \"$APP_USER\" LOGIN PASSWORD '$APP_PW';
+#                  END IF;
+#                END $$;"
+# 
+#       # 2) Basic privileges on the database
+#       aws rds-data execute-statement \
+#         --resource-arn "$CLUSTER_ARN" \
+#         --secret-arn "$MASTER_SECRET_ARN" \
+#         --database "$DB" \
+#         --sql "GRANT CONNECT, TEMP ON DATABASE $DB TO \"$APP_USER\";"
+# 
+#       # 3) Schema usage + DML on all current objects in public schema
+#       aws rds-data execute-statement \
+#         --resource-arn "$CLUSTER_ARN" \
+#         --secret-arn "$MASTER_SECRET_ARN" \
+#         --database "$DB" \
+#         --sql "GRANT USAGE ON SCHEMA public TO \"$APP_USER\";"
+# 
+#       aws rds-data execute-statement \
+#         --resource-arn "$CLUSTER_ARN" \
+#         --secret-arn "$MASTER_SECRET_ARN" \
+#         --database "$DB" \
+#         --sql "GRANT SELECT, INSERT, UPDATE, DELETE ON ALL TABLES IN SCHEMA public TO \"$APP_USER\";"
+# 
+#       aws rds-data execute-statement \
+#         --resource-arn "$CLUSTER_ARN" \
+#         --secret-arn "$MASTER_SECRET_ARN" \
+#         --database "$DB" \
+#         --sql "GRANT USAGE, SELECT, UPDATE ON ALL SEQUENCES IN SCHEMA public TO \"$APP_USER\";"
+# 
+#       # 4) Default privileges for future objects
+#       aws rds-data execute-statement \
+#         --resource-arn "$CLUSTER_ARN" \
+#         --secret-arn "$MASTER_SECRET_ARN" \
+#         --database "$DB" \
+#         --sql "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT SELECT, INSERT, UPDATE, DELETE ON TABLES TO \"$APP_USER\";"
+# 
+#       aws rds-data execute-statement \
+#         --resource-arn "$CLUSTER_ARN" \
+#         --secret-arn "$MASTER_SECRET_ARN" \
+#         --database "$DB" \
+#         --sql "ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT USAGE, SELECT, UPDATE ON SEQUENCES TO \"$APP_USER\";"
+#     EOT
+#   }
+# }
+# 
+# # --- NEW: handy outputs (optional) ---
+# output "app_user_secret_arn" {
+#   value       = try(aws_secretsmanager_secret.app_user_secret[0].arn, null)
+#   description = "Secrets Manager secret ARN that stores the app user's username/password."
+# }
