@@ -32,7 +32,7 @@ if __name__ == "__main__":
     folder_path = "spec-sheets"
     
     # S3 bucket name
-    bucket_name = "bedrock-kb-513101285646" # 2025.09.15 Mon: created by terraform when it ran partially (until EC2 error came up) 
+    bucket_name = "bedrock-kb-513101285646" # 2025.09.15 Mon AND Wed: created by terraform when it ran partially (until EC2 error came up) 
     # "bedrock-kb-awsengineerassignment2" # "bedrock-kb-975050171524"  # Replace with your actual bucket name
     
     # S3 prefix (optional)
