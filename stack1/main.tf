@@ -1,7 +1,19 @@
+# how does /workspaces/udacity-aws-awengineer-assignment2/modules/database interact with /workspaces/udacity-aws-awengineer-assignment2/stack1???? we do 'terraform init and terraform apply' in the stack1 folder
+# stack1 is the parent module
+#   stack1/main.tf = call site
+#   'stack1/main.tf' >> module "aurora_serverless" = module call
+
+# modules/database = child module
+#   database/variables.tf = inputs tt the child module defines itself OR GETS FROM stack1 PARENT
+#   database/outputs.tf = outputs tt the child module SHARES BACK TO THE stack1 PARENT
+
+
 provider "aws" {
   region = "us-east-1"  # Change this to your desired region # UPDATED
 }
 
+
+# 'data' -> read/fetch data about existing AWS resources
 
 # ADDED TO FIX PERMISSIONS ISSUE
 # This data block LOOKS UP the existing Default VPC. It does NOT create a new one.
@@ -43,7 +55,13 @@ data "aws_subnets" "default" {
 #   }
 # }
 
+
+
+
+
 module "aurora_serverless" {
+
+  # 'module' = reusable Terraform module in 'modules/database'
   source = "../modules/database"
 
   cluster_identifier = "my-aurora-serverless"
@@ -70,26 +88,52 @@ module "aurora_serverless" {
 
 }
 
+#######################
+# AWS Account ID - use for Bedrock's S3 bucket name
+#######################
 data "aws_caller_identity" "current" {}
 
 locals {
   bucket_name = "bedrock-kb-${data.aws_caller_identity.current.account_id}"
 }
+#######################
 
+
+
+# create S3 bucket
 module "s3_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
   version = "~> 3.0"
 
+  # use the 'bucket_name' defined above
+  # why 'local', not 'locals'????
+  # when definining, define 1 OR MORE using 'locals'
+  #  locals {
+  #   var1 = ....
+  #   var2 = ...
+  #   var3 = ...
+  # }
+  # BUT when referencing/using the variable, use 'local'
+  # 1 at a time
+  # local.var1
+  # local.var2
+  # local.var3
   bucket = local.bucket_name
+  # private bucket
   acl    = "private"
+  # can delete bucket even if it contains objects - eg when spring cleaning after our assignment
   force_destroy = true
 
+
+  # object ownership
   control_object_ownership = true
   object_ownership         = "BucketOwnerPreferred"
 
+  # enable version control of objects
   versioning = {
     enabled = true
   }
+
 
   server_side_encryption_configuration = {
     rule = {
@@ -105,6 +149,7 @@ module "s3_bucket" {
   # restrict_public_buckets = true
   # 2025.09.16 Fix to allow public access to VPC, to connect and run SQL on Aurora Serverless DB (required to complete assignment 2)
   #            Otherwise we are able to connect to Aurora DB on the 'Aurora and RDS' GUI, BUT unable to run queries (for some unexpected reason because permissions are not given for the assignment)
+  # 2025.09.18 Still unable to run queries on Query Editor even with 'false' set for these 4 options
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = false

@@ -1,3 +1,6 @@
+# INPUT VARIABLES to database/main.tf file (CHILD MODULE)
+#       either defined in this file - if there is a 'default' value set
+#       OR read from stack1/main.tf (PARENT MODULE)
 variable "cluster_identifier" {
   description = "The cluster identifier"
   type        = string

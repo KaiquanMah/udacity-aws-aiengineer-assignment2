@@ -39,3 +39,13 @@ if __name__ == "__main__":
     prefix = "spec-sheets" 
     
     upload_files_to_s3(folder_path, bucket_name, prefix)
+
+
+# WHY IS IT THAT AFTER WE CREATED AURORA DB, BEDROCK KNOWLEDGE BASE (CONNECTED TO AURORA DB), UPLOADED DOCS TO S3, 
+# WE NEED TO MANUALLY ADD FILES FROM S3 TO THE KNOWLEDGE BASE, THEN MANUALLY ADD FILES TO SYNC???? 
+#    THE MANUAL ADDITION OF FILES DO NOT MAKE SENSE
+#    Manual CUZ reading >> chunking docs >> from text generate embeddings >> ingest embeddings into Aurora DB
+#           has a cost/needs resources
+#           SO trigger/sync manually
+
+

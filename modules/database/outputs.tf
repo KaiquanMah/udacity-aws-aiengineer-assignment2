@@ -1,3 +1,4 @@
+# GET OUTPUTS from main.tf file
 output "cluster_endpoint" {
   description = "The cluster endpoint"
   value       = aws_rds_cluster.aurora_serverless.endpoint

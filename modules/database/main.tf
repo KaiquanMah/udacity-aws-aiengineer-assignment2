@@ -5,8 +5,9 @@ resource "aws_rds_cluster" "aurora_serverless" {
   engine_version          = var.engine_version
   database_name           = var.database_name
   master_username         = var.master_username
+  # generate a random password
   master_password         = random_password.master_password.result
-  enable_http_endpoint    = true
+  enable_http_endpoint    = true  # HTTP endpoint enabled for AWS Data API
   skip_final_snapshot     = true
   apply_immediately       = true
 
@@ -71,10 +72,13 @@ resource "aws_security_group" "aurora_sg" {
     cidr_blocks = var.allowed_cidr_blocks
   }
 
+  # all outbound allowed???? YES
+  # from 0, to 0, protocol -1 means ALL PORTS, ALL PROTOCOLS
   egress {
     from_port   = 0
     to_port     = 0
     protocol    = "-1"
+    # ALL IPv4 addresses
     cidr_blocks = ["0.0.0.0/0"]
   }
 
@@ -84,8 +88,12 @@ resource "aws_security_group" "aurora_sg" {
 }
 
 # New resources for secret management
+# HOW is 'random_password' generated???? By some AWS library called random_password???? NO
+# By Terraform 'random' provider - created on our local machine during 'terraform plan / terraform apply' stages
+# then comms/pass to AWS
 resource "random_password" "master_password" {
   length  = 16
+  # incl special characters (AND numbers, letters)
   special = true
 }
 
@@ -95,7 +103,10 @@ resource "aws_secretsmanager_secret" "aurora_secret" {
 }
 
 resource "aws_secretsmanager_secret_version" "aurora_secret_version" {
+  # 'key' for the secret
   secret_id = aws_secretsmanager_secret.aurora_secret.id
+
+  # 'value'
   secret_string = jsonencode({
     dbClusterIdentifier = aws_rds_cluster.aurora_serverless.cluster_identifier
     password            = random_password.master_password.result

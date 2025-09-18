@@ -101,15 +101,21 @@ resource "time_sleep" "wait_10_seconds" {
   create_duration = "10s"
 }
 
+
+
+# MAIN RESOURCE - BEDROCK KNOWLEDGE BASE THAT WE ARE PROVISIONING
 resource "aws_bedrockagent_knowledge_base" "main" {
   name = var.knowledge_base_name
   role_arn = aws_iam_role.bedrock_kb_role.arn
+
   knowledge_base_configuration {
     vector_knowledge_base_configuration {
       embedding_model_arn = "arn:aws:bedrock:us-east-1::foundation-model/amazon.titan-embed-text-v1"
     }
     type = "VECTOR"
   }
+
+  
   storage_configuration {
     type = "RDS"
     rds_configuration {

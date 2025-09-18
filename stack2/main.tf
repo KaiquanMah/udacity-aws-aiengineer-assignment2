@@ -2,6 +2,10 @@ provider "aws" {
   region = "us-east-1"  
 }
 
+
+# why the aurora arn/db_name/endpoint is needed???? why cant i just give 1 item, and let AWS figure out the other informaiton since AWS indeed has all the metadata for matching????
+# CUZ bedrock does not automatically infer all the info from 1 aurora DB identifier
+#     1 cluster can also have multiple DB
 module "bedrock_kb" {
   source = "../modules/bedrock_kb" 
 

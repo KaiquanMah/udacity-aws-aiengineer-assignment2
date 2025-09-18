@@ -1,3 +1,6 @@
+# inputs from stack2's main.tf (PARENT MODULE)
+#        TO here
+#        THEN we pass to bedrock_kb/main.tf (CHILD MODULE)
 variable "knowledge_base_name" {
   description = "The name of the Bedrock knowledge base"
   type        = string
