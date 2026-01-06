@@ -1,0 +1,340 @@
+Search terms:
+aws_vpc.this: vpc-01dee4a713e2612f7
+aws_s3_bucket.this: bedrock-kb-513101285646
+aurora cluster endpoint: tf-20250915024716012500000001.cd50zqu2mtps.us-east-1.rds.amazonaws.com
+
+[Pending fix.] Fix IAM Permissions: Contact your administrator to grant the necessary ec2:CreateInternetGateway permission.
+[Ok. Checked - actually aurora serverless] Fix Database Module: Modify the file ../modules/database/main.tf to correctly use Aurora Serverless v2 by configuring the engine_mode and serverlessv2_scaling_configuration block.
+
+
+
+
+
+
+
+
+$ terraform apply
+module.aurora_serverless.random_password.master_password: Refreshing state... [id=none]
+module.aurora_serverless.aws_secretsmanager_secret.aurora_secret: Refreshing state... [id=arn:aws:secretsmanager:us-east-1:513101285646:secret:my-aurora-serverless-hiZ0MA]
+data.aws_caller_identity.current: Reading...
+module.vpc.aws_vpc.this[0]: Refreshing state... [id=vpc-01dee4a713e2612f7]
+module.s3_bucket.data.aws_region.current: Reading...
+module.s3_bucket.data.aws_partition.current: Reading...
+module.s3_bucket.data.aws_canonical_user_id.this[0]: Reading...
+module.s3_bucket.data.aws_region.current: Read complete after 0s [id=us-east-1]
+module.s3_bucket.data.aws_caller_identity.current: Reading...
+module.s3_bucket.data.aws_partition.current: Read complete after 0s [id=aws]
+data.aws_caller_identity.current: Read complete after 0s [id=513101285646]
+module.s3_bucket.aws_s3_bucket.this[0]: Refreshing state... [id=bedrock-kb-513101285646]
+module.s3_bucket.data.aws_caller_identity.current: Read complete after 0s [id=513101285646]
+module.s3_bucket.data.aws_canonical_user_id.this[0]: Read complete after 0s [id=49738098c5de78aec5834e6615286acd10b6e82f1c63702e0ede1921409d365b]
+module.vpc.aws_default_route_table.default[0]: Refreshing state... [id=rtb-04d0e26268c0d8c61]
+module.vpc.aws_default_network_acl.this[0]: Refreshing state... [id=acl-087bd6b15bbce8bbf]
+module.vpc.aws_default_security_group.this[0]: Refreshing state... [id=sg-0c2b7d2a07feef111]
+module.vpc.aws_subnet.public[0]: Refreshing state... [id=subnet-0147b6b2d775fd4be]
+module.aurora_serverless.aws_security_group.aurora_sg: Refreshing state... [id=sg-0ff0c4fc0cbbf5695]
+module.vpc.aws_subnet.public[1]: Refreshing state... [id=subnet-0b1c50e7a047fa1a0]
+module.vpc.aws_subnet.private[0]: Refreshing state... [id=subnet-057d52a2a260b4e1f]
+module.vpc.aws_subnet.private[1]: Refreshing state... [id=subnet-06e9004c651ffe135]
+module.vpc.aws_subnet.public[2]: Refreshing state... [id=subnet-03205d5204aa645f8]
+module.vpc.aws_subnet.private[2]: Refreshing state... [id=subnet-0d579af43eb9ae8d1]
+module.vpc.aws_route_table.public[0]: Refreshing state... [id=rtb-0350e4cc4f3f5aaf0]
+module.vpc.aws_route_table.private[0]: Refreshing state... [id=rtb-0eb577c096610c083]
+module.vpc.aws_route_table_association.public[2]: Refreshing state... [id=rtbassoc-046e700deb02331bf]
+module.vpc.aws_route_table_association.public[0]: Refreshing state... [id=rtbassoc-0f02fc6626cf21edd]
+module.vpc.aws_route_table_association.public[1]: Refreshing state... [id=rtbassoc-05370b8240a6e7e80]
+module.aurora_serverless.aws_db_subnet_group.aurora: Refreshing state... [id=my-aurora-serverless-subnet-group]
+module.vpc.aws_route_table_association.private[1]: Refreshing state... [id=rtbassoc-0f72897306ae74f9f]
+module.vpc.aws_route_table_association.private[2]: Refreshing state... [id=rtbassoc-0e88f27ec5cbb76d5]
+module.vpc.aws_route_table_association.private[0]: Refreshing state... [id=rtbassoc-060b1707cc4f36ea9]
+module.s3_bucket.aws_s3_bucket_versioning.this[0]: Refreshing state... [id=bedrock-kb-513101285646]
+module.s3_bucket.aws_s3_bucket_server_side_encryption_configuration.this[0]: Refreshing state... [id=bedrock-kb-513101285646]
+module.s3_bucket.aws_s3_bucket_public_access_block.this[0]: Refreshing state... [id=bedrock-kb-513101285646]
+module.s3_bucket.aws_s3_bucket_ownership_controls.this[0]: Refreshing state... [id=bedrock-kb-513101285646]
+module.s3_bucket.aws_s3_bucket_acl.this[0]: Refreshing state... [id=bedrock-kb-513101285646,private]
+module.aurora_serverless.aws_rds_cluster.aurora_serverless: Refreshing state... [id=my-aurora-serverless]
+module.aurora_serverless.aws_secretsmanager_secret_version.aurora_secret_version: Refreshing state... [id=arn:aws:secretsmanager:us-east-1:513101285646:secret:my-aurora-serverless-hiZ0MA|terraform-20250915014140341000000004]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Refreshing state... [id=tf-20250915022919572700000001]
+
+Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the
+following symbols:
+  + create
+-/+ destroy and then create replacement
+
+Terraform will perform the following actions:
+
+  # module.aurora_serverless.aws_rds_cluster_instance.aurora_instance is tainted, so must be replaced
+-/+ resource "aws_rds_cluster_instance" "aurora_instance" {
+      + apply_immediately                     = (known after apply)
+      ~ arn                                   = "arn:aws:rds:us-east-1:513101285646:db:tf-20250915022919572700000001" -> (known after apply)
+      ~ availability_zone                     = "us-east-1a" -> (known after apply)
+      ~ ca_cert_identifier                    = "rds-ca-rsa2048-g1" -> (known after apply)
+      ~ db_parameter_group_name               = "default.aurora-postgresql15" -> (known after apply)
+      ~ db_subnet_group_name                  = "my-aurora-serverless-subnet-group" -> (known after apply)
+      ~ dbi_resource_id                       = "db-EZ5HABREH24TPDBWFCYRY6ZXG4" -> (known after apply)
+      ~ endpoint                              = "tf-20250915022919572700000001.cd50zqu2mtps.us-east-1.rds.amazonaws.com" -> (known after apply)
+      ~ engine_version_actual                 = "15.4" -> (known after apply)
+      ~ id                                    = "tf-20250915022919572700000001" -> (known after apply)
+      ~ identifier                            = "tf-20250915022919572700000001" -> (known after apply)
+      ~ identifier_prefix                     = "tf-" -> (known after apply)
+      + kms_key_id                            = (known after apply)
+      + monitoring_role_arn                   = (known after apply)
+      ~ network_type                          = "IPV4" -> (known after apply)
+      ~ performance_insights_enabled          = false -> (known after apply)
+      + performance_insights_kms_key_id       = (known after apply)
+      ~ performance_insights_retention_period = 0 -> (known after apply)
+      ~ port                                  = 5432 -> (known after apply)
+      ~ preferred_backup_window               = "08:02-08:32" -> (known after apply)
+      ~ preferred_maintenance_window          = "fri:05:53-fri:06:23" -> (known after apply)
+      ~ publicly_accessible                   = false -> (known after apply)
+      ~ storage_encrypted                     = false -> (known after apply)
+      - tags                                  = {} -> null
+      ~ tags_all                              = {} -> (known after apply)
+      ~ writer                                = true -> (known after apply)
+        # (10 unchanged attributes hidden)
+    }
+
+  # module.vpc.aws_eip.nat[0] will be created
+  + resource "aws_eip" "nat" {
+      + allocation_id        = (known after apply)
+      + arn                  = (known after apply)
+      + association_id       = (known after apply)
+      + carrier_ip           = (known after apply)
+      + customer_owned_ip    = (known after apply)
+      + domain               = "vpc"
+      + id                   = (known after apply)
+      + instance             = (known after apply)
+      + ipam_pool_id         = (known after apply)
+      + network_border_group = (known after apply)
+      + network_interface    = (known after apply)
+      + private_dns          = (known after apply)
+      + private_ip           = (known after apply)
+      + ptr_record           = (known after apply)
+      + public_dns           = (known after apply)
+      + public_ip            = (known after apply)
+      + public_ipv4_pool     = (known after apply)
+      + region               = "us-east-1"
+      + tags                 = {
+          + "Environment" = "dev"
+          + "Name"        = "bedrock-poc-vpc-us-east-1a"
+          + "Terraform"   = "true"
+        }
+      + tags_all             = {
+          + "Environment" = "dev"
+          + "Name"        = "bedrock-poc-vpc-us-east-1a"
+          + "Terraform"   = "true"
+        }
+    }
+
+  # module.vpc.aws_internet_gateway.this[0] will be created
+  + resource "aws_internet_gateway" "this" {
+      + arn      = (known after apply)
+      + id       = (known after apply)
+      + owner_id = (known after apply)
+      + region   = "us-east-1"
+      + tags     = {
+          + "Environment" = "dev"
+          + "Name"        = "bedrock-poc-vpc"
+          + "Terraform"   = "true"
+        }
+      + tags_all = {
+          + "Environment" = "dev"
+          + "Name"        = "bedrock-poc-vpc"
+          + "Terraform"   = "true"
+        }
+      + vpc_id   = "vpc-01dee4a713e2612f7"
+    }
+
+  # module.vpc.aws_nat_gateway.this[0] will be created
+  + resource "aws_nat_gateway" "this" {
+      + allocation_id                      = (known after apply)
+      + association_id                     = (known after apply)
+      + connectivity_type                  = "public"
+      + id                                 = (known after apply)
+      + network_interface_id               = (known after apply)
+      + private_ip                         = (known after apply)
+      + public_ip                          = (known after apply)
+      + region                             = "us-east-1"
+      + secondary_allocation_ids           = (known after apply)
+      + secondary_private_ip_address_count = (known after apply)
+      + secondary_private_ip_addresses     = (known after apply)
+      + subnet_id                          = "subnet-0147b6b2d775fd4be"
+      + tags                               = {
+          + "Environment" = "dev"
+          + "Name"        = "bedrock-poc-vpc-us-east-1a"
+          + "Terraform"   = "true"
+        }
+      + tags_all                           = {
+          + "Environment" = "dev"
+          + "Name"        = "bedrock-poc-vpc-us-east-1a"
+          + "Terraform"   = "true"
+        }
+    }
+
+  # module.vpc.aws_route.private_nat_gateway[0] will be created
+  + resource "aws_route" "private_nat_gateway" {
+      + destination_cidr_block = "0.0.0.0/0"
+      + id                     = (known after apply)
+      + instance_id            = (known after apply)
+      + instance_owner_id      = (known after apply)
+      + nat_gateway_id         = (known after apply)
+      + network_interface_id   = (known after apply)
+      + origin                 = (known after apply)
+      + region                 = "us-east-1"
+      + route_table_id         = "rtb-0eb577c096610c083"
+      + state                  = (known after apply)
+
+      + timeouts {
+          + create = "5m"
+        }
+    }
+
+  # module.vpc.aws_route.public_internet_gateway[0] will be created
+  + resource "aws_route" "public_internet_gateway" {
+      + destination_cidr_block = "0.0.0.0/0"
+      + gateway_id             = (known after apply)
+      + id                     = (known after apply)
+      + instance_id            = (known after apply)
+      + instance_owner_id      = (known after apply)
+      + network_interface_id   = (known after apply)
+      + origin                 = (known after apply)
+      + region                 = "us-east-1"
+      + route_table_id         = "rtb-0350e4cc4f3f5aaf0"
+      + state                  = (known after apply)
+
+      + timeouts {
+          + create = "5m"
+        }
+    }
+
+Plan: 6 to add, 0 to change, 1 to destroy.
+╷
+│ Warning: Deprecated attribute
+│ 
+│   on .terraform/modules/s3_bucket/main.tf line 586, in data "aws_iam_policy_document" "elb_log_delivery":
+│  586:     for_each = { for k, v in local.elb_service_accounts : k => v if k == data.aws_region.current.name }
+│ 
+│ The attribute "name" is deprecated. Refer to the provider documentation for details.
+│ 
+│ (and 2 more similar warnings elsewhere)
+╵
+
+Do you want to perform these actions?
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+
+
+
+  Enter a value: yes 
+
+
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Destroying... [id=tf-20250915022919572700000001]
+module.vpc.aws_internet_gateway.this[0]: Creating...
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 1m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 1m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 1m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 1m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 1m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 1m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 2m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 2m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 2m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 2m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 2m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 2m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 3m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 3m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 3m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 3m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 3m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 3m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 4m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 4m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 4m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 4m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 4m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 4m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 5m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 5m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 5m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 5m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 5m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 5m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 6m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 6m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 6m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 6m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 6m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 6m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 7m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 7m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 7m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 7m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 7m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 7m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 8m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 8m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 8m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 8m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 8m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 8m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 9m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 9m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still destroying... [id=tf-20250915022919572700000001, 9m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Destruction complete after 9m21s
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Creating...
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [1m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [1m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [1m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [1m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [1m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [1m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [2m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [2m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [2m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [2m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [2m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [2m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [3m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [3m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [3m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [3m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [3m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [3m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [4m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [4m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [4m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [4m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [4m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [4m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [5m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [5m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [5m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [5m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [5m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [5m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [6m0s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [6m10s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [6m20s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [6m30s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [6m40s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Still creating... [6m50s elapsed]
+module.aurora_serverless.aws_rds_cluster_instance.aurora_instance: Creation complete after 6m57s [id=tf-20250915024716012500000001]
+╷
+│ Error: creating EC2 Internet Gateway: operation error EC2: CreateInternetGateway, https response error StatusCode: 403, RequestID: f71d5b98-bccd-46fc-9ecf-55ff6c393340, api error UnauthorizedOperation: You are not authorized to perform this operation. User: arn:aws:sts::513101285646:assumed-role/voclabs/user4341063=u39801231 is not authorized to perform: ec2:CreateInternetGateway on resource: arn:aws:ec2:us-east-1:513101285646:internet-gateway/* because no identity-based policy allows the ec2:CreateInternetGateway action. Encoded authorization failure message: HREFZYiVq3pYQnrb6yFIyFPIkli5-UA4ZIEhb1VU5jtUSF83sOJvRD1OXMNKBTOASrTRNy7TfXx4GpfWp-joWyqN3jAHubxxmw1lKFDsbYizBU_-wbCSTSTAADXt7ShyWSLOXG5zpQqH1zYzQKF1ZjZeML-O6Mofs7wMem1wDsytETLZkz7y_9TF3A0jiJzoF_qtJhYGA1cHC1cQH9U6CvTc65w1MIavvJR9Lw5N_SOAzeZOvyZ9Drt-CBqlI7tNTsyvGt-80VbPQ4PH-3HjlytH8ZjuxVCzfq3_Z5ZHswnUkcOR96_rnD6yk3QPvVQ8SSUt2Y2z8WqKT6VDPzq96LexkdjV__h5_9bA2gdex-IJzlYeb3wfO-IFni3eoEWrG7SdbxDV8R4bz0k9wZGm-Vsb2VtC42Bv0e3x1AmNlNQjbjMo1g7LTa7Vq-KAUuJ7szkyaQPuylohCzOKVRmLDAkJ_wRBGjmcg1S1RqLQyQqP-6vLnrq51YpcNh38uEnZIEEFEC3td4AB5_zKI9MUWdQTRf2S3LfVw82gK7qnxHLgiXyZD5UpCeAddHSg1REfkctrAXM
+│ 
+│   with module.vpc.aws_internet_gateway.this[0],
+│   on .terraform/modules/vpc/main.tf line 1051, in resource "aws_internet_gateway" "this":
+│ 1051: resource "aws_internet_gateway" "this" {
+│ 
+╵
